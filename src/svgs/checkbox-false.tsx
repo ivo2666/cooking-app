@@ -19,14 +19,14 @@ const CheckboxFalse: React.FC = () => {
         height={18}
       >
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3ZM19 19V5H5V19H19Z"
           fill="white"
         />
       </mask>
       <g mask="url(#mask0_16_130)">
-        <rect width={24} height={24} fill="black" fill-opacity="0.6" />
+        <rect width={24} height={24} fill="black" fillOpacity="0.6" />
       </g>
     </svg>
   );

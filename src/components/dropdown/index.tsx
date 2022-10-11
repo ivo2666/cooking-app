@@ -1,27 +1,34 @@
-interface DropdownChildrenProps {
+interface DropdownHeaderProps {
   children: JSX.Element | string;
+}
+interface DropdownBodyProps {
+  children: JSX.Element | string;
+  isOpen?: boolean;
 }
 
 interface DropdownChildren {
-  Header: React.FC<DropdownChildrenProps>;
-  Body: React.FC<DropdownChildrenProps>;
+  Header: React.FC<DropdownHeaderProps>;
+  Body: React.FC<DropdownBodyProps>;
 }
 
 interface DropdownProps {
   children: JSX.Element[];
 }
 
-const Body: React.FC<DropdownChildrenProps> = ({ children }) => (
-  <div
-    className="flex flex-col justify-start items-start w-[328px] absolute left-0 top-[54px] overflow-hidden py-2 rounded-[3.5px] bg-white"
-    style={{ boxShadow: "0px 1px 4px 0 rgba(0,0,0,0.2)" }}
-  >
-    {children}
-  </div>
-);
-const Header: React.FC<DropdownChildrenProps> = ({ children }) => (
-  <>{children}</>
-);
+const Body: React.FC<DropdownBodyProps> = ({ children, isOpen }) => {
+  return (
+    <div
+      className={`flex flex-col justify-start items-start w-[328px] absolute left-0 top-[54px]  overflow-hidden py-2 rounded-[3.5px] bg-white ${
+        !isOpen ? "hidden" : ""
+      }`}
+      style={{ boxShadow: "0px 1px 4px 0 rgba(0,0,0,0.2)" }}
+    >
+      {children}
+    </div>
+  );
+};
+
+const Header: React.FC<DropdownHeaderProps> = ({ children }) => <>{children}</>;
 
 const Dropdown: React.FC<DropdownProps> & DropdownChildren = ({ children }) => {
   return <div className="w-[328px] h-[54px] relative">{children}</div>;

@@ -19,8 +19,8 @@ const CheckboxTrue: React.FC = () => {
           height={18}
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M5.5 3H19.5C20.61 3 21.5 3.9 21.5 5V19C21.5 20.1 20.61 21 19.5 21H5.5C4.39 21 3.5 20.1 3.5 19V5C3.5 3.9 4.39 3 5.5 3ZM5.5 12L10.5 17L19.5 8L18.09 6.58L10.5 14.17L6.91 10.59L5.5 12Z"
             fill="white"
           />
