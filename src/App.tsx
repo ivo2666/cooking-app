@@ -8,6 +8,7 @@ import { Ingredient } from "./data-types";
 import IngredientsList from "./components/ingredients-list";
 import useDebounce from "./hooks/useDebounce";
 import RecipesList from "./components/recipes-list";
+import RecipesLoading from "./components/recipes-loading";
 
 function App() {
   const [filter, setFilter] = useState("");
@@ -50,7 +51,7 @@ function App() {
   } = useQuery(["recipes", searchIngredients], () =>
     service.findRecipes(searchIngredients)
   );
-  console.log(searchIngredients);
+  
   const handleCheck = (id: Ingredient["id"]) => {
     const isExist = !!ingredients?.find((el) => el.id === id);
     setCurrentIngredients((currentIngredients) => {
@@ -76,6 +77,12 @@ function App() {
       return newIngr;
     });
   };
+
+  const recipesList = isRecipesLoading ? (
+    <RecipesLoading />
+  ) : (
+    <RecipesList recipes={recipes || []} />
+  );
 
   return (
     <main className="container mx-auto">
@@ -104,7 +111,7 @@ function App() {
           </Dropdown.Body>
         </Dropdown>
       </Navbar>
-      <RecipesList recipes={recipes || []} />
+      {recipesList}
     </main>
   );
 }

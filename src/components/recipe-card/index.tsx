@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Recipe } from "../../data-types";
 import LinkSvg from "../../svgs/link";
 import RecepiIngr from "./recipe-ingredient";
+import image from './image.png';
 
 interface RecepiCardProps extends Recipe {}
 
@@ -10,9 +12,15 @@ const RecepiCard: React.FC<RecepiCardProps> = ({
   imageUrl,
   ingredients,
 }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+  }
+
   return (
     <div
-      className="flex flex-col justify-between items-start flex-grow-0 flex-shrink-0 relative overflow-hidden rounded bg-white"
+      className="flex flex-col justify-between items-start flex-grow-0 flex-shrink-0 relative overflow-hidden rounded bg-white "
       style={{
         boxShadow:
           "0px 1px 1px 0 rgba(0,0,0,0.14), 0px 2px 1px 0 rgba(0,0,0,0.12), 0px 1px 4px 0 rgba(0,0,0,0.2)",
@@ -30,8 +38,15 @@ const RecepiCard: React.FC<RecepiCardProps> = ({
       <div className="self-stretch flex-grow-0 flex-shrink-0 h-48 relative">
         <img
           src={imageUrl}
+          onLoad={handleLoad}
           alt="meal"
-          className="w-[294px] h-48 absolute left-[-0.5px] top-[-0.5px] object-cover"
+          className={`w-[294px] h-48 absolute left-[-0.5px] top-[-0.5px] object-cover ${isLoaded ? "visible" : "invisible"}`}
+        />
+        <img
+          src={image}
+          // onLoad={handleLoad}
+          alt="meal"
+          className={`w-[294px] h-48 absolute left-[-0.5px] top-[-0.5px] object-cover ${!isLoaded ? "visible" : "invisible"}`}
         />
         <div className="w-[294px] h-48 absolute left-[-0.5px] top-[-0.5px]" />
       </div>
