@@ -7,6 +7,7 @@ import service from "./service";
 import { Ingredient } from "./data-types";
 import IngredientsList from "./components/ingredients-list";
 import useDebounce from "./hooks/useDebounce";
+import RecipesList from "./components/recipes-list";
 
 function App() {
   const [filter, setFilter] = useState("");
@@ -49,30 +50,31 @@ function App() {
   } = useQuery(["recipes", searchIngredients], () =>
     service.findRecipes(searchIngredients)
   );
-
+  console.log(searchIngredients);
   const handleCheck = (id: Ingredient["id"]) => {
     const isExist = !!ingredients?.find((el) => el.id === id);
-    setCurrentIngredients(
-      (currentIngredients) => {
-        let newIngr: Ingredient[] = [];
-        currentIngredients.forEach((el) => {
-          if (el.id === id) {
-            if (isExist) {
-              setSearchIngredients((current) => [...current, el.name]);
-              newIngr = [...newIngr, { ...el, isChecked: !el.isChecked }];
-            } else {
-              setSearchIngredients((current) =>
-                current.filter((name) => name !== el.name)
-              );
-            }
-          } else {
-            newIngr = [...newIngr, el];
+    setCurrentIngredients((currentIngredients) => {
+      let newIngr: Ingredient[] = [];
+      currentIngredients.forEach((el) => {
+        if (el.id === id) {
+          if (isExist) {
+            newIngr = [...newIngr, { ...el, isChecked: !el.isChecked }];
           }
-        });
 
-        return newIngr;
-      }
-    );
+          if (el.isChecked) {
+            setSearchIngredients((current) =>
+              current.filter((name) => name !== el.name)
+            );
+          } else {
+            setSearchIngredients((current) => [...current, el.name]);
+          }
+        } else {
+          newIngr = [...newIngr, el];
+        }
+      });
+
+      return newIngr;
+    });
   };
 
   return (
@@ -102,6 +104,7 @@ function App() {
           </Dropdown.Body>
         </Dropdown>
       </Navbar>
+      <RecipesList recipes={recipes || []} />
     </main>
   );
 }
