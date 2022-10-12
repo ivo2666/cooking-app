@@ -3,36 +3,32 @@ import Spinner from "../../svgs/loading";
 import DropdownItem from "../dropdown-item";
 
 interface IngredientsListsProps {
-  checkedIngr: Ingredient[];
+  currentIngredients: Ingredient[];
   ingredients: Ingredient[] | undefined;
-  handleCheck: (ingr: Ingredient, isChecked: boolean) => void;
+  handleCheck: (id: Ingredient["id"]) => void;
   isLoading: boolean;
   hasError: boolean;
   searching: string;
 }
 
 const IngredientsList: React.FC<IngredientsListsProps> = ({
-  checkedIngr,
+  currentIngredients,
   ingredients = [],
   handleCheck,
   isLoading,
   hasError,
   searching,
 }) => {
-  
   if (hasError) {
     return <div>Something wrong</div>;
   }
 
-  if (searching && !ingredients.length && !checkedIngr.length && !isLoading) {
-    return (
-      <div className="flex items-center justify-center w-full min-h-[100px]">
-       No matching ingredients
-      </div>
-    );
-  }
-  
-  if ((searching && !ingredients.length && !checkedIngr.length) || isLoading) {
+  if (
+    searching &&
+    !ingredients.length &&
+    !currentIngredients.length &&
+    isLoading
+  ) {
     return (
       <div className="flex items-center justify-center w-full min-h-[100px]">
         <Spinner />
@@ -42,17 +38,22 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
 
   return (
     <>
-      {[...checkedIngr, ...ingredients].map((ingr: Ingredient) => {
+      {currentIngredients.map((ingr: Ingredient) => {
         const { id, name, isChecked } = ingr;
         return (
           <DropdownItem
             key={id}
             value={name}
             isChecked={!!isChecked}
-            onChange={() => handleCheck(ingr, !!isChecked)}
+            onChange={() => handleCheck(id)}
           />
         );
       })}
+      {searching && !ingredients.length && !isLoading && (
+        <div className="flex items-center justify-center w-full min-h-[100px]">
+          No matching ingredients
+        </div>
+      )}
     </>
   );
 };

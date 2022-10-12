@@ -24,8 +24,8 @@ const service = {
   findIngredients: async (string: string) => {
     return callAPI<Ingredient>(`$.ingredients[?(/^.*${string}.*$/i.test(@.name))]`)
   },
-  findRecipes: async (string: string) => {
-    return callAPI<Recipe>(`$.recipes[?(/^.*${string}.*$/i.test(@.ingredients))]`)
+  findRecipes: async (arr: string[]) => {
+    return callAPI<Recipe>(`$.recipes[?(/^(?=.*${arr.join(")(?=.*")}).*$/i.test(@.ingredients))]`)
   },
 };
 

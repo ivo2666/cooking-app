@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -10,7 +10,7 @@ import useDebounce from "./hooks/useDebounce";
 
 function App() {
   const [filter, setFilter] = useState("");
-  const [checkedIngr, setCheckedIngr] = useState<Ingredient[]>([]);
+  const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const debouncedFilter = useDebounce(filter, 500);
 
   const {
@@ -25,11 +25,53 @@ function App() {
     }
   );
 
-  const handleCheck = (ingr: Ingredient, isChecked: boolean) => {
-    setCheckedIngr((checkedIngr) =>
-      isChecked
-        ? checkedIngr.filter((el) => el.id !== ingr.id)
-        : [...checkedIngr, { ...ingr, isChecked: true }]
+  const [currentIngredients, setCurrentIngredients] = useState<Ingredient[]>(
+    ingredients || []
+  );
+
+  useEffect(() => {
+    setCurrentIngredients((currentIngredients) => {
+      const checkedIngr = currentIngredients.filter((el) => el.isChecked);
+      setSearchIngredients(checkedIngr.map(({ name }) => name));
+      return [
+        ...checkedIngr,
+        ...(ingredients || []).filter(
+          (a) => !currentIngredients.find((b) => a.id === b.id)
+        ),
+      ];
+    });
+  }, [ingredients]);
+
+  const {
+    data: recipes,
+    isFetching: isRecipesLoading,
+    error: recipesErr,
+  } = useQuery(["recipes", searchIngredients], () =>
+    service.findRecipes(searchIngredients)
+  );
+
+  const handleCheck = (id: Ingredient["id"]) => {
+    const isExist = !!ingredients?.find((el) => el.id === id);
+    setCurrentIngredients(
+      (currentIngredients) => {
+        let newIngr: Ingredient[] = [];
+        currentIngredients.forEach((el) => {
+          if (el.id === id) {
+            if (isExist) {
+              setSearchIngredients((current) => [...current, el.name]);
+              newIngr = [...newIngr, { ...el, isChecked: !el.isChecked }];
+            } else {
+              setSearchIngredients((current) =>
+                current.filter((name) => name !== el.name)
+              );
+            }
+          } else {
+            newIngr = [...newIngr, el];
+          }
+        });
+
+        return newIngr;
+      }
     );
   };
 
@@ -44,10 +86,12 @@ function App() {
               label="Filter Ingridients"
             />
           </Dropdown.Header>
-          <Dropdown.Body isOpen={!!debouncedFilter}>
+          <Dropdown.Body
+            isOpen={!!debouncedFilter || !!currentIngredients.length}
+          >
             <IngredientsList
               {...{
-                checkedIngr,
+                currentIngredients,
                 ingredients,
                 handleCheck,
                 isLoading: isIngrLoading,
