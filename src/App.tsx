@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -32,7 +32,7 @@ function App() {
     ingredients || []
   );
 
-  useEffect(() => {
+  useCallback(() => {
     setCurrentIngredients((currentIngredients) => {
       const checkedIngr = currentIngredients.filter((el) => el.isChecked);
       setSearchIngredients(checkedIngr.map(({ name }) => name));
@@ -48,7 +48,6 @@ function App() {
   const {
     data: recipes,
     isFetching: isRecipesLoading,
-    error: recipesErr,
   } = useQuery(["recipes", searchIngredients], () =>
     service.findRecipes(searchIngredients)
   );
@@ -84,7 +83,7 @@ function App() {
   ) : (
     <RecipesList recipes={recipes || []} />
   );
-
+  
   return (
     <>
     <main className="container mx-auto">
