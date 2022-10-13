@@ -12,6 +12,7 @@ import RecipesLoading from "./components/recipes-loading";
 import Footer from "./components/footer";
 
 function App() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const debouncedFilter = useDebounce(filter, 500);
@@ -44,13 +45,11 @@ function App() {
       ];
     });
   }, [ingredients]);
-  const {
-    data: recipes,
-    isFetching: isRecipesLoading,
-  } = useQuery(["recipes", searchIngredients], () =>
-    service.findRecipes(searchIngredients)
+  const { data: recipes, isFetching: isRecipesLoading } = useQuery(
+    ["recipes", searchIngredients],
+    () => service.findRecipes(searchIngredients)
   );
-  
+
   const handleCheck = (id: Ingredient["id"]) => {
     const isExist = !!ingredients?.find((el) => el.id === id);
     setCurrentIngredients((currentIngredients) => {
@@ -82,39 +81,47 @@ function App() {
   ) : (
     <RecipesList recipes={recipes || []} />
   );
-  
+
+  const handleFocus = () => setIsDropdownOpen(true);
+  const handleCloseDropdown = () => setIsDropdownOpen(false);
+
+  const dropdownRequirement =
+    isDropdownOpen && (!!debouncedFilter || !!currentIngredients.length);
+
   return (
     <>
-    <main className="container mx-auto">
-      <Navbar>
-        <Dropdown>
-          <Dropdown.Header>
-            <Input
-              value={filter}
-              setValue={setFilter}
-              label="Filter Ingridients"
-            />
-          </Dropdown.Header>
-          <Dropdown.Body
-            isOpen={!!debouncedFilter || !!currentIngredients.length}
-          >
-            <IngredientsList
-              {...{
-                currentIngredients,
-                ingredients,
-                handleCheck,
-                isLoading: isIngrLoading,
-                hasError: !!ingrErr,
-                searching: debouncedFilter,
-              }}
-            />
-          </Dropdown.Body>
-        </Dropdown>
-      </Navbar>
-      {recipesList}
-    </main>
+      <main className="container mx-auto">
+        <Navbar>
+          <Dropdown>
+            <Dropdown.Header>
+              <Input
+                value={filter}
+                onFocus={handleFocus}
+                setValue={setFilter}
+                label="Filter Ingridients"
+              />
+            </Dropdown.Header>
+            <Dropdown.Body
+              isOpen={dropdownRequirement}
+              onClose={handleCloseDropdown}
+            >
+              <IngredientsList
+                {...{
+                  currentIngredients,
+                  ingredients,
+                  handleCheck,
+                  isLoading: isIngrLoading,
+                  hasError: !!ingrErr,
+                  searching: debouncedFilter,
+                }}
+              />
+            </Dropdown.Body>
+          </Dropdown>
+        </Navbar>
+        {recipesList}
+      </main>
       <Footer />
-      </>
+    </>
   );
 }
 export default App;

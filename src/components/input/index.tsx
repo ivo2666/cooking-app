@@ -5,9 +5,10 @@ interface InputProps {
   setValue: Dispatch<SetStateAction<string>>;
   label: string;
   error?: boolean;
+  onFocus?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({ value, setValue, label, error }) => {
+const Input: React.FC<InputProps> = ({ value, setValue, label, error, onFocus }) => {
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setValue(event.target.value);
   };
@@ -15,6 +16,7 @@ const Input: React.FC<InputProps> = ({ value, setValue, label, error }) => {
     <div className="relative z-0   group  text-content-primary">
       <input
         type="text"
+        onFocus={onFocus}
         name={label}
         placeholder=" "
         value={value}
