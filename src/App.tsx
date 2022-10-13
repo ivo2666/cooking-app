@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -32,7 +32,7 @@ function App() {
     ingredients || []
   );
 
-  useCallback(() => {
+  useMemo(() => {
     setCurrentIngredients((currentIngredients) => {
       const checkedIngr = currentIngredients.filter((el) => el.isChecked);
       setSearchIngredients(checkedIngr.map(({ name }) => name));
@@ -44,7 +44,6 @@ function App() {
       ];
     });
   }, [ingredients]);
-
   const {
     data: recipes,
     isFetching: isRecipesLoading,
