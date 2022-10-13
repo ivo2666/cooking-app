@@ -7,7 +7,7 @@ interface RecipesListProps {
 
 const RecipesList: React.FC<RecipesListProps> = ({ recipes }) => {
   return (
-    <div className=" min-h-screen flex flex-wrap gap-5 pt-8">
+    <div className=" min-h-screen flex flex-wrap justify-center sm:justify-start gap-5 pt-8">
       {recipes.map((recipe) => (
         <RecepiCard key={recipe.title} {...recipe} />
       ))}

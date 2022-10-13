@@ -6,7 +6,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ children }) => {
   return (
-    <nav className="flex items-center justify-between p-6 shadow-custom rounded-custom">
+    <nav className="flex flex-wrap items-center justify-between p-6 shadow-custom rounded-custom">
       <Logo />
       {children}
     </nav>

@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({
       <div className="relative rounded flex flex-col items-center justify-center w-full h-full p-4 ">
         <div
           ref={ref}
-          className={`relative bg-white rounded min-w-[611px] ${
+          className={`relative bg-white rounded sm:min-w-[611px] ${
             className || ""
           }`}
         >

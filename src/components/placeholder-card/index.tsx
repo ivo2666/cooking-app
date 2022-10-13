@@ -9,14 +9,14 @@ const PlaceholderCard: React.FC = () => {
     >
       <div>
         <div className="flex flex-col justify-start items-start  gap-2 p-4 bg-white">
-          <p className=" w-[262px] text-[26px] gap-2 flex flex-col">
+          <div className=" w-[262px] text-[26px] gap-2 flex flex-col">
             <div className="bg-gray-200 rounded-md w-full h-7 "></div>
             <div className="bg-gray-200 rounded-md w-3/4 h-7 "></div>
             <div className="bg-gray-200 rounded-md w-1/4 h-4 mt-3"></div>
-          </p>
-          <p className=" w-[262px] text-lg text-left text-black/60">
+          </div>
+          <div className=" w-[262px] text-lg text-left text-black/60">
             <div className="bg-gray-200 rounded-md"></div>
-          </p>
+          </div>
         </div>
         <div className="h-48">
           <div className="rounded-md w-full h-48   bg-indigo-200"></div>

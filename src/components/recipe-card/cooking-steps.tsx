@@ -14,11 +14,11 @@ const CookingSteps: React.FC<CookingStepsProps> = ({ preparationMethod }) => {
         >
           <div className="w-8 h-8 relative">
             <Circle />
-            <p className="absolute left-[11px] top-1 text-lg text-center text-white">
+            <p className="absolute left-[11px] text-lg text-center text-white">
               {step}
             </p>
           </div>
-          <p className="flex-grow-0 flex-shrink-0 w-[515px] text-base text-left text-black/[0.87]">
+          <p className="flex-grow-0 flex-shrink-0 w-[80%] ml-5 sm:ml-0 sm:w-[515px] text-base text-left text-black/[0.87]">
             {text}
           </p>
         </div>

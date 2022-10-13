@@ -31,7 +31,7 @@ const Body: React.FC<DropdownBodyProps> = ({ children, isOpen }) => {
 const Header: React.FC<DropdownHeaderProps> = ({ children }) => <>{children}</>;
 
 const Dropdown: React.FC<DropdownProps> & DropdownChildren = ({ children }) => {
-  return <div className="w-[328px] h-[54px] relative">{children}</div>;
+  return <div className="w-[328px] h-[54px] relative mt-5 sm:mt-0">{children}</div>;
 };
 
 Dropdown.Header = Header;

@@ -9,6 +9,7 @@ import IngredientsList from "./components/ingredients-list";
 import useDebounce from "./hooks/useDebounce";
 import RecipesList from "./components/recipes-list";
 import RecipesLoading from "./components/recipes-loading";
+import Footer from "./components/footer";
 
 function App() {
   const [filter, setFilter] = useState("");
@@ -85,6 +86,7 @@ function App() {
   );
 
   return (
+    <>
     <main className="container mx-auto">
       <Navbar>
         <Dropdown>
@@ -113,6 +115,8 @@ function App() {
       </Navbar>
       {recipesList}
     </main>
+      <Footer />
+      </>
   );
 }
 export default App;
