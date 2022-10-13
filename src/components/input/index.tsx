@@ -1,17 +1,15 @@
-import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import { ChangeEventHandler } from "react";
 
 interface InputProps {
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
   label: string;
   error?: boolean;
   onFocus?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({ value, setValue, label, error, onFocus }) => {
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setValue(event.target.value);
-  };
+const Input: React.FC<InputProps> = ({ value, handleChange, label, error, onFocus }) => {
+  
   return (
     <div className="relative z-0   group  text-content-primary">
       <input

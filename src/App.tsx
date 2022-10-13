@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChangeEventHandler, useMemo, useState } from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -84,6 +84,10 @@ function App() {
 
   const handleFocus = () => setIsDropdownOpen(true);
   const handleCloseDropdown = () => setIsDropdownOpen(false);
+  const handleFilter: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setIsDropdownOpen(true);
+    setFilter(event.target.value);
+  };
 
   const dropdownRequirement =
     isDropdownOpen && (!!debouncedFilter || !!currentIngredients.length);
@@ -97,7 +101,7 @@ function App() {
               <Input
                 value={filter}
                 onFocus={handleFocus}
-                setValue={setFilter}
+                handleChange={handleFilter}
                 label="Filter Ingridients"
               />
             </Dropdown.Header>

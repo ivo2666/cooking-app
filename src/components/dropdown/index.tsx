@@ -22,7 +22,6 @@ interface DropdownProps {
 const Body: React.FC<DropdownBodyProps> = ({ children, isOpen, onClose }) => {
   const ref = useRef(null);
   useOnClickOutside(ref, (e: Event) => onClose());
-  console.log(isOpen)
   return (
     <div
     ref={ref}
