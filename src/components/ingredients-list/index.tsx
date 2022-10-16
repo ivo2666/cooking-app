@@ -5,7 +5,7 @@ import DropdownItem from "../dropdown-item";
 interface IngredientsListsProps {
   currentIngredients: Ingredient[];
   ingredients: Ingredient[] | undefined;
-  handleCheck: (id: Ingredient["id"]) => void;
+  handleCheck: (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => void;
   isLoading: boolean;
   hasError: boolean;
   searching: string;
@@ -45,7 +45,7 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
             key={id}
             value={name}
             isChecked={!!isChecked}
-            onChange={() => handleCheck(id)}
+            onChange={() => handleCheck(id, name, isChecked)}
           />
         );
       })}

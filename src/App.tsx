@@ -1,4 +1,9 @@
-import { ChangeEventHandler, useMemo, useState } from "react";
+import {
+  ChangeEventHandler,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -14,84 +19,72 @@ import Footer from "./components/footer";
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filter, setFilter] = useState("");
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [searchIngredients, setSearchIngredients] = useState<string[]>([]);
   const debouncedFilter = useDebounce(filter, 500);
 
   const {
-    data: ingredients,
+    data,
     isFetching: isIngrLoading,
     error: ingrErr,
   } = useQuery(
     ["ingredients", debouncedFilter],
-    () => service.findIngredients(debouncedFilter),
+    async () => {
+      const data = await service.findIngredients(debouncedFilter);
+      setIngredients((i) => [
+        ...i.filter(({ isChecked }) => isChecked),
+        ...data,
+      ]);
+      return data
+    },
     {
       enabled: !!debouncedFilter,
     }
   );
 
-  const [currentIngredients, setCurrentIngredients] = useState<Ingredient[]>(
-    ingredients || []
-  );
-
-  useMemo(() => {
-    setCurrentIngredients((currentIngredients) => {
-      const checkedIngr = currentIngredients.filter((el) => el.isChecked);
-      setSearchIngredients(checkedIngr.map(({ name }) => name));
-      return [
-        ...checkedIngr,
-        ...(ingredients || []).filter(
-          (a) => !currentIngredients.find((b) => a.id === b.id)
-        ),
-      ];
-    });
-  }, [ingredients]);
-  const { data: recipes, isFetching: isRecipesLoading } = useQuery(
+  const { data: recipes, isLoading: isRecipesLoading } = useQuery(
     ["recipes", searchIngredients],
     () => service.findRecipes(searchIngredients)
   );
 
-  const handleCheck = (id: Ingredient["id"]) => {
-    const isExist = !!ingredients?.find((el) => el.id === id);
-    setCurrentIngredients((currentIngredients) => {
-      let newIngr: Ingredient[] = [];
-      currentIngredients.forEach((el) => {
-        if (el.id === id) {
-          if (isExist) {
-            newIngr = [...newIngr, { ...el, isChecked: !el.isChecked }];
-          }
-
-          if (el.isChecked) {
-            setSearchIngredients((current) =>
-              current.filter((name) => name !== el.name)
-            );
-          } else {
-            setSearchIngredients((current) => [...current, el.name]);
-          }
-        } else {
-          newIngr = [...newIngr, el];
-        }
-      });
-
-      return newIngr;
-    });
-  };
-
-  const recipesList = isRecipesLoading ? (
-    <RecipesLoading />
-  ) : (
-    <RecipesList recipes={recipes || []} />
+  const handleCheck = useCallback(
+    (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => {
+      if (isChecked && !(data || []).find((x) => x.id === id)) {
+        setIngredients(ingredients.filter((el) => el.id !== id));
+        setSearchIngredients((s) => s.filter((str) => str !== name));
+      } else {
+        setIngredients(
+          ingredients.map((el) =>
+            el.id === id ? { ...el, isChecked: !el.isChecked } : el
+          )
+        );
+        setSearchIngredients((s) => [...s, name]);
+      }
+    },
+    [ingredients, data]
   );
 
-  const handleFocus = () => setIsDropdownOpen(true);
-  const handleCloseDropdown = () => setIsDropdownOpen(false);
+  const recipesList = useMemo(
+    () =>
+      isRecipesLoading ? (
+        <RecipesLoading />
+      ) : (
+        <RecipesList recipes={recipes || []} />
+      ),
+    [recipes, isRecipesLoading]
+  );
+
+  const handleFocus = useCallback(() => setIsDropdownOpen(true), []);
+  const handleCloseDropdown = useCallback(() => setIsDropdownOpen(false), []);
   const handleFilter: ChangeEventHandler<HTMLInputElement> = (event) => {
     setIsDropdownOpen(true);
     setFilter(event.target.value);
   };
 
-  const dropdownRequirement =
-    isDropdownOpen && (!!debouncedFilter || !!currentIngredients.length);
-
+  const dropdownRequirement = useMemo(
+    () => isDropdownOpen && (!!debouncedFilter || !!ingredients.length),
+    [isDropdownOpen, debouncedFilter, ingredients.length]
+  );
   return (
     <>
       <main className="container mx-auto">
@@ -111,8 +104,8 @@ function App() {
             >
               <IngredientsList
                 {...{
-                  currentIngredients,
-                  ingredients,
+                  currentIngredients: ingredients,
+                  ingredients: data || [],
                   handleCheck,
                   isLoading: isIngrLoading,
                   hasError: !!ingrErr,
