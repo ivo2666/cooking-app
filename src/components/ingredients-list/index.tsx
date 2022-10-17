@@ -25,8 +25,6 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
 
   if (
     searching &&
-    !ingredients.length &&
-    !currentIngredients.length &&
     isLoading
   ) {
     return (

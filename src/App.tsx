@@ -1,9 +1,4 @@
-import {
-  ChangeEventHandler,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from "react";
 import Dropdown from "./components/dropdown";
 import Input from "./components/input";
 import Navbar from "./components/navbar";
@@ -31,11 +26,15 @@ function App() {
     ["ingredients", debouncedFilter],
     async () => {
       const data = await service.findIngredients(debouncedFilter);
-      setIngredients((i) => [
-        ...i.filter(({ isChecked }) => isChecked),
-        ...data,
-      ]);
-      return data
+      setIngredients((i) => {
+        const prevChecked = i.filter(({ isChecked }) => isChecked); 
+        const currentWithoutRepeats = data.filter((el) => !(prevChecked.find((x) => x.id === el.id))) 
+        return [
+          ...prevChecked,
+          ...currentWithoutRepeats,
+        ]
+      });
+      return data;
     },
     {
       enabled: !!debouncedFilter,
@@ -51,13 +50,17 @@ function App() {
     (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => {
       if (isChecked && !(data || []).find((x) => x.id === id)) {
         setIngredients(ingredients.filter((el) => el.id !== id));
-        setSearchIngredients((s) => s.filter((str) => str !== name));
       } else {
         setIngredients(
           ingredients.map((el) =>
             el.id === id ? { ...el, isChecked: !el.isChecked } : el
           )
         );
+      }
+
+      if (isChecked) {
+        setSearchIngredients((s) => s.filter((str) => str !== name));
+      } else {
         setSearchIngredients((s) => [...s, name]);
       }
     },
@@ -82,9 +85,17 @@ function App() {
   };
 
   const dropdownRequirement = useMemo(
-    () => isDropdownOpen && (!!debouncedFilter || !!ingredients.length),
-    [isDropdownOpen, debouncedFilter, ingredients.length]
+    () => isDropdownOpen && (!!debouncedFilter || !!searchIngredients.length),
+    [isDropdownOpen, debouncedFilter, searchIngredients.length]
   );
+
+  useEffect(() => {
+    if (!debouncedFilter) {
+      setIngredients(i => [...i.filter(({isChecked}) => isChecked)])
+    }
+  },[debouncedFilter])
+  
+  
   return (
     <>
       <main className="container mx-auto">
