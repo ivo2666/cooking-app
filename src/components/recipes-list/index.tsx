@@ -1,14 +1,25 @@
-import { Recipe } from "../../data-types";
+import { useQuery } from "react-query";
+import service from "../../service";
 import RecepiCard from "../recipe-card";
+import RecipesLoading from "../recipes-loading";
 
 interface RecipesListProps {
-  recipes: Recipe[];
+  searchIngredients: string[];
 }
 
-const RecipesList: React.FC<RecipesListProps> = ({ recipes }) => {
+const RecipesList: React.FC<RecipesListProps> = ({ searchIngredients }) => {
+  const { data: recipes, isLoading: isRecipesLoading } = useQuery(
+    ["recipes", searchIngredients],
+    () => service.findRecipes(searchIngredients)
+  );
+
+  if (isRecipesLoading) {
+    return <RecipesLoading />
+  }
+
   return (
-    <div className=" min-h-screen flex flex-wrap justify-center sm:justify-start gap-5 pt-8">
-      {recipes.map((recipe) => (
+    <div className="flex flex-wrap justify-center min-h-screen gap-5 pt-8 sm:justify-start">
+      {(recipes || []).map((recipe) => (
         <RecepiCard key={recipe.title} {...recipe} />
       ))}
     </div>

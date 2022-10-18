@@ -3,29 +3,29 @@ import Spinner from "../../svgs/loading";
 import DropdownItem from "../dropdown-item";
 
 interface IngredientsListsProps {
-  currentIngredients: Ingredient[];
-  ingredients: Ingredient[] | undefined;
+  ingredients: Ingredient[];
+  hasData: boolean;
   handleCheck: (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => void;
-  isLoading: boolean;
-  hasError: boolean;
-  searching: string;
+  isFetching: boolean;
+  error: unknown;
+  searching: boolean;
 }
 
 const IngredientsList: React.FC<IngredientsListsProps> = ({
-  currentIngredients,
-  ingredients = [],
+  ingredients,
+  hasData,
   handleCheck,
-  isLoading,
-  hasError,
+  isFetching,
+  error,
   searching,
 }) => {
-  if (hasError) {
+  if (error) {
     return <div>Something wrong</div>;
   }
 
   if (
     searching &&
-    isLoading
+    isFetching
   ) {
     return (
       <div className="flex items-center justify-center w-full min-h-[100px]">
@@ -36,7 +36,7 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
 
   return (
     <>
-      {currentIngredients.map((ingr: Ingredient) => {
+      {ingredients.map((ingr: Ingredient) => {
         const { id, name, isChecked } = ingr;
         return (
           <DropdownItem
@@ -47,7 +47,7 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
           />
         );
       })}
-      {searching && !ingredients.length && !isLoading && (
+      {searching && !hasData && !isFetching && (
         <div className="flex items-center justify-center w-full min-h-[100px]">
           No matching ingredients
         </div>
