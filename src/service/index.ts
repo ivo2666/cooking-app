@@ -2,30 +2,37 @@ import axios from "axios";
 import { Ingredient, Recipe } from "../data-types";
 
 const API = process.env.REACT_APP_API_URL;
+const API_KEY = process.env.REACT_APP_API_KEY;
 
-const callAPI = async <T>(path: string):Promise<T[]> => {
+type CallApiFunc = <T>(
+  resource: "food/ingredients" | "recipes",
+  searchType: string,
+  query: string
+) => Promise<T[]>;
+
+const callAPI: CallApiFunc = async (resource, searchType, query) => {
   try {
     const response = await axios({
       method: "get",
-      url: API,
-      headers: {
-        'Content-type': 'application/json',
-        "X-JSON-Path": path,
-      },
+      url: `${API}${resource}/${searchType}?${query}&apiKey=${API_KEY}`,
+      headers: { "Content-Type": "application/json" },
     });
-    return response.data.record
+    return response.data.results || response.data;
   } catch (error) {
     console.log(error);
-    return []
+    return [];
   }
-}
-
+};
 const service = {
-  findIngredients: async (string: string) => {
-    return callAPI<Ingredient>(`$.ingredients[?(/^.*${string}.*$/i.test(@.name))]`)
+  findIngredients: async (query: string) => {
+    return callAPI<Ingredient>("food/ingredients", "search", `query=${query}`);
   },
-  findRecipes: async (arr: string[]) => {
-    return callAPI<Recipe>(`$.recipes[?(/^(?=.*${arr.join(")(?=.*")}).*$/i.test(@.ingredients))]`)
+  findRecipes: async (ingredients: string[]) => {
+    return callAPI<Recipe>(
+      "recipes",
+      "findByIngredients",
+      `ingredients=${ingredients.join(",+")}`
+    );
   },
 };
 

@@ -16,7 +16,6 @@ const RecipesList: React.FC<RecipesListProps> = ({ searchIngredients }) => {
   if (isRecipesLoading) {
     return <RecipesLoading />
   }
-
   return (
     <div className="flex flex-wrap justify-center min-h-screen gap-5 pt-8 sm:justify-start">
       {(recipes || []).map((recipe) => (
