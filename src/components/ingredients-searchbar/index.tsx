@@ -1,8 +1,13 @@
-import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import {
+  ChangeEventHandler,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Ingredient } from "../../data-types";
 import useDebounce from "../../hooks/useDebounce";
-import service from "../../service";
+import useFindIngredients from "../../hooks/useFindIngredients";
 import Dropdown from "../dropdown";
 import IngredientsList from "../ingredients-list";
 import Input from "../input";
@@ -16,45 +21,29 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filter, setFilter] = useState("");
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const ingredientsRef = useRef<Ingredient[]>([]);
   const debouncedFilter = useDebounce(filter, 500);
 
-  const { data, isFetching, error } = useQuery(
-    ["ingredients", debouncedFilter],
-    async () => {
-      const data = await service.findIngredients(debouncedFilter);
-      setIngredients((i) => {
-        const prevChecked = i.filter(({ isChecked }) => isChecked);
-        const currentWithoutRepeats = data.filter(
-          (el) => !prevChecked.find((x) => x.id === el.id)
-        );
-        return [...prevChecked, ...currentWithoutRepeats];
-      });
-      return data;
-    },
-    {
-      enabled: !!debouncedFilter,
-    }
-  );
+  const { data, isFetching, error } = useFindIngredients(debouncedFilter);
 
   const handleFocus = useCallback(() => setIsDropdownOpen(true), []);
-  
+
   const handleCloseDropdown = useCallback(() => setIsDropdownOpen(false), []);
 
   const handleFilter: ChangeEventHandler<HTMLInputElement> = (event) => {
     setIsDropdownOpen(true);
     setFilter(event.target.value);
   };
-  
+
   const handleCheck = useCallback(
     (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => {
       if (isChecked && !(data || []).find((x) => x.id === id)) {
-        setIngredients(ingredients.filter((el) => el.id !== id));
+        ingredientsRef.current = ingredientsRef.current.filter(
+          (el) => el.id !== id
+        );
       } else {
-        setIngredients(
-          ingredients.map((el) =>
-            el.id === id ? { ...el, isChecked: !el.isChecked } : el
-          )
+        ingredientsRef.current = ingredientsRef.current.map((el) =>
+          el.id === id ? { ...el, isChecked: !el.isChecked } : el
         );
       }
 
@@ -64,18 +53,32 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
         setSearchIngredients((s) => [...s, name]);
       }
     },
-    [ingredients, data, setSearchIngredients]
+    [data, setSearchIngredients]
   );
 
-  useEffect(() => {
+  useMemo(() => {
+    const prevChecked = ingredientsRef.current.filter(
+      ({ isChecked }) => isChecked
+    );
+    const currentWithoutRepeats = (data || []).filter(
+      (el) => !prevChecked.find((x) => x.id === el.id)
+    );
+    ingredientsRef.current = [...prevChecked, ...currentWithoutRepeats];
+
+    return ingredientsRef.current;
+  }, [data]);
+
+  useMemo(() => {
     if (!debouncedFilter) {
-      setIngredients((i) => [...i.filter(({ isChecked }) => isChecked)]);
+      ingredientsRef.current = [
+        ...ingredientsRef.current.filter(({ isChecked }) => isChecked),
+      ];
     }
   }, [debouncedFilter]);
-
+  
   return (
     <Dropdown
-      open={isDropdownOpen && (!!debouncedFilter || !!ingredients.length)}
+      open={isDropdownOpen && (!!debouncedFilter || !!ingredientsRef.current.length)}
       trigger={
         <Input
           value={filter}
@@ -87,7 +90,7 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
       menu={
         <IngredientsList
           {...{
-            ingredients,
+            ingredients: ingredientsRef.current,
             hasData: !!data?.length,
             handleCheck,
             isFetching,

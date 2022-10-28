@@ -21,6 +21,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       {trigger}
       <div
         ref={ref}
+        id="div"
         className={`flex flex-col justify-start items-start w-[328px] absolute z-10 left-0 top-[54px]  overflow-hidden py-2 rounded-[3.5px] bg-white ${
           !open ? "hidden" : ""
         }`}
