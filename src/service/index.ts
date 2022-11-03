@@ -10,7 +10,7 @@ const callAPI: CallApiFunc = async (resource, query) => {
   try {
     const response = await axios({
       method: "get",
-      url: `${resource}?${query}`,
+      url: `api/${resource}?${query}`,
       headers: { "Content-Type": "application/json" },
     });
     return response.data.results || response.data;

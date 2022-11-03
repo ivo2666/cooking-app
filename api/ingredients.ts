@@ -7,7 +7,7 @@ export default async function handler(request, response) {
   const {query} = request;
   const res: any = await axios({
     method: "get",
-    url: `${API}/food/ingredients?query=${query}&apiKey=${API_KEY}`,
+    url: `${API}/food/ingredients/search?query=${query}&apiKey=${API_KEY}`,
     headers: { "Content-Type": "application/json" },
   });
 
