@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import useOnClickOutside from "../../hooks/useClickOutside";
+import useOnClickOutside from "../../../hooks/useClickOutside";
 
 interface DropdownProps {
   open: boolean;

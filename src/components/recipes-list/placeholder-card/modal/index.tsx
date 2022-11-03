@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import useOnClickOutside from "../../hooks/useClickOutside";
-import Close from "../../svgs/close";
+import useOnClickOutside from "../../../../hooks/useClickOutside";
+import Close from "../../../../svgs/close";
 
 interface ModalProps
   extends React.DetailedHTMLProps<

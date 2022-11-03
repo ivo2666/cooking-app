@@ -10,7 +10,7 @@ describe('Input component', () => {
   }
   test('should value prop to be equal to input value', () => { 
     const value = "test"
-    const input = setup({value, label: "lable", handleChange: () => {}})
+    const input = setup({value, label: "lable", onChange: () => {}})
     expect(input.value).toBe(value)
    })
  })
@@ -28,7 +28,7 @@ describe('Input component', () => {
 //       onFocus={() => {
 //         testOnFocus = "focus"
 //       }}
-//       handleChange={() => {
+//       onChange={() => {
 //         testHandleChange = valueAfterChange;
 //       }}
 //     />
@@ -55,7 +55,7 @@ describe('Input component', () => {
 //     onFocus={() => {
       
 //     }}
-//     handleChange={() => {
+//     onChange={() => {
       
 //     }}
 //     error={true}

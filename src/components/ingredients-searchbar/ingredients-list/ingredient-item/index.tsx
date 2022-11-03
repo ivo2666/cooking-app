@@ -1,13 +1,13 @@
-import CheckboxFalse from "../../svgs/checkbox-false";
-import CheckboxTrue from "../../svgs/checkbox-true";
+import CheckboxFalse from "../../../../svgs/checkbox-false";
+import CheckboxTrue from "../../../../svgs/checkbox-true";
 
-interface DropdownItemProps {
+interface IngredientItemProps {
   value: string;
   isChecked: boolean;
   onChange: (isChecked: boolean) => void;
 }
 
-const DropdownItem: React.FC<DropdownItemProps> = ({
+const IngredientItem: React.FC<IngredientItemProps> = ({
   value,
   isChecked,
   onChange,
@@ -28,4 +28,4 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   );
 };
 
-export default DropdownItem;
+export default IngredientItem;

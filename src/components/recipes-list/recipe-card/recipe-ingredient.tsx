@@ -1,4 +1,4 @@
-import ListDot from "../../svgs/list-dot";
+import ListDot from "../../../svgs/list-dot";
 
 interface RecepiIngrProps {
   ingredient: string;

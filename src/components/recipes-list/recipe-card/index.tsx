@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Recipe } from "../../data-types";
-import LinkSvg from "../../svgs/link";
+import { Recipe } from "../../../data-types";
+import LinkSvg from "../../../svgs/link";
 import RecepiIngr from "./recipe-ingredient";
 import loadImage from "./image.png";
-import Modal from "../modal";
+import Modal from "../placeholder-card/modal";
 import CookingSteps from "./cooking-steps";
 
 interface RecepiCardProps extends Recipe {}

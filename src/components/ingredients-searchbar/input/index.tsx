@@ -2,13 +2,13 @@ import { ChangeEventHandler } from "react";
 
 export interface InputProps {
   value: string;
-  handleChange: ChangeEventHandler<HTMLInputElement>;
+  onChange: ChangeEventHandler<HTMLInputElement>;
   label: string;
   error?: boolean;
   onFocus?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({ value, handleChange, label, error, onFocus }) => {
+const Input: React.FC<InputProps> = ({ value, onChange, label, error, onFocus }) => {
   
   return (
     <div className="relative z-0 group text-content-primary">
@@ -19,7 +19,7 @@ const Input: React.FC<InputProps> = ({ value, handleChange, label, error, onFocu
         placeholder=" "
         autoComplete="off"
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         className={`block  invalid:z-10 disabled:z-10 disabled:bg-[#f7f7f7] disabled:border-black/[0.12]
          border border-gainsboro rounded  h-input w-input p-input autofill:bg-transparent text-lg text-black/80 bg-transparent  appearance-none
           focus:outline-none focus:ring-0  peer focus:border focus:border-[#3593e9]
@@ -35,9 +35,6 @@ const Input: React.FC<InputProps> = ({ value, handleChange, label, error, onFocu
       >
         {label}
       </label>
-      {/* <p className="invisible mt-2 text-sm text-pink-600 peer-invalid:visible">
-        Please type something.
-      </p> */}
     </div>
   );
 };

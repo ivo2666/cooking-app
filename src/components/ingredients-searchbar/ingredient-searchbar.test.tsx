@@ -10,7 +10,7 @@ error: undefined,
 
 test("<IngredientsSearchbar />", async () => {
   
-  render(<IngredientsSearchbar setSearchIngredients={() => {}} />);
+  render(<IngredientsSearchbar onChange={() => {}} />);
   // const input = screen.getByLabelText("Filter Ingridients");
   // fireEvent.change(input, { target: { value: "salt" } });
   // const items = await screen.findAllByText(/salt/)

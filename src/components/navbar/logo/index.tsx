@@ -1,5 +1,5 @@
 import { memo } from "react";
-import Pot from "../../svgs/pot";
+import Pot from "../../../svgs/pot";
 
 const Logo: React.FC = () => {
   return (

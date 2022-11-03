@@ -1,30 +1,30 @@
-import { Ingredient } from "../../data-types";
-import Spinner from "../../svgs/loading";
-import DropdownItem from "../dropdown-item";
+import { Ingredient } from "../../../data-types";
+import Spinner from "../../../svgs/loading";
+import IngredientItem from "./ingredient-item";
 
 interface IngredientsListsProps {
   ingredients: Ingredient[];
   hasData: boolean;
-  handleCheck: (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => void;
+  onChange: (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => void;
   isFetching: boolean;
   error: unknown;
-  searching: boolean;
+  isSearching: boolean;
 }
 
 const IngredientsList: React.FC<IngredientsListsProps> = ({
   ingredients,
   hasData,
-  handleCheck,
+  onChange,
   isFetching,
   error,
-  searching,
+  isSearching,
 }) => {
   if (error) {
     return <div>Something wrong</div>;
   }
 
   if (
-    searching &&
+    isSearching &&
     isFetching
   ) {
     return (
@@ -39,15 +39,15 @@ const IngredientsList: React.FC<IngredientsListsProps> = ({
       {ingredients.map((ingr: Ingredient) => {
         const { id, name, isChecked } = ingr;
         return (
-          <DropdownItem
+          <IngredientItem
             key={id}
             value={name}
             isChecked={!!isChecked}
-            onChange={() => handleCheck(id, name, isChecked)}
+            onChange={() => onChange(id, name, isChecked)}
           />
         );
       })}
-      {searching && !hasData && !isFetching && (
+      {isSearching && !hasData && !isFetching && (
         <div className="flex items-center justify-center w-full min-h-[100px]">
           No matching ingredients
         </div>

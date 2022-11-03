@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import service from "../../service";
-import RecepiCard from "../recipe-card";
-import RecipesLoading from "../recipes-loading";
+import RecepiCard from "./recipe-card";
+import RecipesLoading from "./recipes-loading";
 
 interface RecipesListProps {
   searchIngredients: string[];

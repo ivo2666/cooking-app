@@ -1,4 +1,4 @@
-import Circle from "../../svgs/circle";
+import Circle from "../../../svgs/circle";
 
 interface CookingStepsProps {
   preparationMethod: { step: number; text: string }[];

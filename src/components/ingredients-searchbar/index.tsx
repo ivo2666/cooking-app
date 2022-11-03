@@ -8,16 +8,16 @@ import {
 import { Ingredient } from "../../data-types";
 import useDebounce from "../../hooks/useDebounce";
 import useFindIngredients from "../../hooks/useFindIngredients";
-import Dropdown from "../dropdown";
-import IngredientsList from "../ingredients-list";
-import Input from "../input";
+import Dropdown from "./dropdown";
+import IngredientsList from "./ingredients-list";
+import Input from "./input";
 
 interface IngredientsSearchbarProps {
-  setSearchIngredients: (value: React.SetStateAction<string[]>) => void;
+  onChange: (name:string, isChecked: boolean | undefined) => void;
 }
 
 const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
-  setSearchIngredients,
+  onChange,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [filter, setFilter] = useState("");
@@ -30,12 +30,12 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
 
   const handleCloseDropdown = useCallback(() => setIsDropdownOpen(false), []);
 
-  const handleFilter: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setIsDropdownOpen(true);
     setFilter(event.target.value);
   };
 
-  const handleCheck = useCallback(
+  const handleSearchIngrChange = useCallback(
     (id: Ingredient["id"], name: string, isChecked: boolean | undefined) => {
       if (isChecked && !(data || []).find((x) => x.id === id)) {
         ingredientsRef.current = ingredientsRef.current.filter(
@@ -46,14 +46,9 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
           el.id === id ? { ...el, isChecked: !el.isChecked } : el
         );
       }
-
-      if (isChecked) {
-        setSearchIngredients((s) => s.filter((str) => str !== name));
-      } else {
-        setSearchIngredients((s) => [...s, name]);
-      }
+      onChange(name, isChecked)
     },
-    [data, setSearchIngredients]
+    [data, onChange]
   );
 
   useMemo(() => {
@@ -83,7 +78,7 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
         <Input
           value={filter}
           onFocus={handleFocus}
-          handleChange={handleFilter}
+          onChange={handleChange}
           label="Filter Ingridients"
         />
       }
@@ -92,10 +87,10 @@ const IngredientsSearchbar: React.FC<IngredientsSearchbarProps> = ({
           {...{
             ingredients: ingredientsRef.current,
             hasData: !!data?.length,
-            handleCheck,
+            onChange: handleSearchIngrChange,
             isFetching,
             error,
-            searching: !!debouncedFilter,
+            isSearching: !!debouncedFilter,
           }}
         />
       }
