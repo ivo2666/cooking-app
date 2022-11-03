@@ -5,9 +5,9 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 export default async function handler(request, response) {
   const {query} = request;
-  const res = await axios({
+  const res: any = await axios({
     method: "get",
-    url: `${API}/food/ingredients?query=${query}&apiKey=${API_KEY}`,
+    url: `${API}/food/recipes?ingredients=${query}&apiKey=${API_KEY}`,
     headers: { "Content-Type": "application/json" },
   });
 
