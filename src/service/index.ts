@@ -1,20 +1,16 @@
 import axios from "axios";
 import { Ingredient, Recipe } from "../data-types";
 
-const API = process.env.REACT_APP_API_URL;
-const API_KEY = process.env.REACT_APP_API_KEY;
-
 type CallApiFunc = <T>(
-  resource: "food/ingredients" | "recipes",
-  searchType: string,
+  resource: "ingredients" | "recipes",
   query: string
 ) => Promise<T[]>;
 
-const callAPI: CallApiFunc = async (resource, searchType, query) => {
+const callAPI: CallApiFunc = async (resource, query) => {
   try {
     const response = await axios({
       method: "get",
-      url: `${API}${resource}/${searchType}?${query}&apiKey=${API_KEY}`,
+      url: `${resource}?${query}`,
       headers: { "Content-Type": "application/json" },
     });
     return response.data.results || response.data;
@@ -25,13 +21,12 @@ const callAPI: CallApiFunc = async (resource, searchType, query) => {
 };
 const service = {
   findIngredients: async (query: string) => {
-    return callAPI<Ingredient>("food/ingredients", "search", `query=${query}`);
+    return callAPI<Ingredient>("ingredients", query);
   },
   findRecipes: async (ingredients: string[]) => {
     return callAPI<Recipe>(
       "recipes",
-      "findByIngredients",
-      `ingredients=${ingredients.join(",+")}`
+      ingredients.join(",+")
     );
   },
 };
