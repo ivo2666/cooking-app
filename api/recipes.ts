@@ -11,6 +11,6 @@ export default async function handler(request:VercelRequest, response:VercelResp
     url: `${API}/recipes/findByIngredients?ingredients=${query}&apiKey=${API_KEY}`,
     headers: { "Content-Type": "application/json" },
   });
-
-  return response.status(200).send(res);
+  const { data } = res;
+  return response.status(200).json(data);
 }
