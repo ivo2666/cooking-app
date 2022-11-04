@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API = process.env.REACT_APP_API_URL;
-const API_KEY = process.env.REACT_APP_API_KEY;
 
 export default async function handler(request, response) {
- try {
+  try {
+   const API = process.env.REACT_APP_API_URL;
+   const API_KEY = process.env.REACT_APP_API_KEY;
   const {query} = request;
   const res: any = await axios({
     method: "get",
