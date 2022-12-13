@@ -4,12 +4,13 @@ import LinkSvg from "../../../svgs/link";
 import RecepiIngr from "./recipe-ingredient";
 import loadImage from "./image.png";
 import Modal from "../placeholder-card/modal";
-import CookingSteps from "./cooking-steps";
+import RecipeDetails from "./recipe-details";
 
 interface RecepiCardProps extends Recipe {}
 
 const RecepiCard: React.FC<RecepiCardProps> = ({
   title,
+  id,
   image,
   missedIngredients,
   usedIngredients,
@@ -32,7 +33,7 @@ const RecepiCard: React.FC<RecepiCardProps> = ({
   return (
     <>
       <Modal show={isStepsOpen} onClose={handleClose}>
-        <CookingSteps preparationMethod={[{step: 1, text: "sdfa"}]} />
+        <RecipeDetails id={id.toString()} />
       </Modal>
       <div
         className="relative flex flex-col items-start justify-between flex-grow-0 flex-shrink-0 overflow-hidden bg-white rounded cursor-pointer "
@@ -46,9 +47,6 @@ const RecepiCard: React.FC<RecepiCardProps> = ({
           <div className="relative flex flex-col items-start self-stretch justify-start flex-grow-0 flex-shrink-0 gap-2 p-4 bg-white">
             <p className="self-stretch flex-grow-0 flex-shrink-0 w-[262px] text-[26px] font-medium text-left text-black/[0.87]">
               {title}
-            </p>
-            <p className="self-stretch flex-grow-0 flex-shrink-0 w-[262px] text-lg text-left text-black/60">
-              {5}
             </p>
           </div>
           <div className="relative self-stretch flex-grow-0 flex-shrink-0 h-48">

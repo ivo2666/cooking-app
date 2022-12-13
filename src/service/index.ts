@@ -2,9 +2,9 @@ import axios from "axios";
 import { Ingredient, Recipe } from "../data-types";
 
 type CallApiFunc = <T>(
-  resource: "ingredients" | "recipes",
+  resource: "ingredients" | "recipes" | "recipe",
   query: string
-) => Promise<T[]>;
+) => Promise<T>;
 
 const callAPI: CallApiFunc = async (resource, query) => {
   try {
@@ -21,12 +21,15 @@ const callAPI: CallApiFunc = async (resource, query) => {
 };
 const service = {
   findIngredients: async (query: string) => {
-    return callAPI<Ingredient>("ingredients", query);
+    return callAPI<Ingredient[]>("ingredients", query);
   },
   findRecipes: async (ingredients: string[]) => {
-    return callAPI<Recipe>(
-      "recipes",
-      ingredients.join(",+")
+    return callAPI<Recipe[]>("recipes", ingredients.join(",+"));
+  },
+  getRecipe: async (id: string) => {
+    return callAPI<{ id: string; summary: string; title: string }>(
+      "recipe",
+      `${id}`
     );
   },
 };

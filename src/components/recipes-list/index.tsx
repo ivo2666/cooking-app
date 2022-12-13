@@ -15,7 +15,6 @@ const RecipesList: React.FC<RecipesListProps> = ({ searchIngredients }) => {
       enabled: !!searchIngredients.length,
     }
   );
-
   if (isRecipesLoading) {
     return <RecipesLoading />
   }
