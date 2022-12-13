@@ -10,7 +10,10 @@ interface RecipesListProps {
 const RecipesList: React.FC<RecipesListProps> = ({ searchIngredients }) => {
   const { data: recipes, isLoading: isRecipesLoading } = useQuery(
     ["recipes", searchIngredients],
-    () => service.findRecipes(searchIngredients)
+    () => service.findRecipes(searchIngredients),
+    {
+      enabled: !!searchIngredients.length,
+    }
   );
 
   if (isRecipesLoading) {
